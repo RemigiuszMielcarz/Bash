@@ -1,0 +1,145 @@
+rmielcar@inyo:~/Pulpit$
+
+1. System plików Unixa i polecenia na katalogach:
+
+cd = przejście do katalogu domowego
+
+ls = wyświetlenie plików w podanym katalogu
+
+ls -l = wypisuje je wraz z datą ostatniej modyfikacji, wielkością podaną w bajtach, loginem właściciela, grupą do której on należy, liczbą dowiązań twardych, prawami dostępu oraz typem pliku
+
+ls -a = tak jak 'czyste' "ls", ale nie pomija plików o nazwach zaczynających się kropką, takich jak ".mozilla/", których zazwyczaj nie widzimy i nie używamy.
+
+ls -1 = wypisuje tylko nazwy, ale nie w kilku kolumnach jak w wersji 'podstawowej' tylko w jednej.
+
+man ls = "help" dla komendy ls
+
+cd podkatalog = przejście do katalogu "podkatalog"
+
+cd .. = przejście do katalogu wstecz
+
+rmdir podkatalog = usunięcie katalogu "podkatalog"
+
+cd / = przenosi do katalogu root całego systemu.
+
+cd /etc = przenosi do katalogu systemowego /etc, który zawiera pliki konfiguracyjne systemu i różnych programów systemowych.
+
+**ls -ltr = przełącznik "l" opisałem powyżej, "t" sortuje listę pod względem czasu ostatniej modyfikacji, nowsze najpierw. Jednak "r" odwraca tę kolejność sortowania.
+
+ls -l *.conf** = tak jak "ls -l", ale wyświetla tylko pliki z rozszerzeniem "conf".
+
+ls -l *.? = wyświetla tylko pliki z rozszerzeniami jednoliterowymi. Czyli gdyby było "???", to wtedy tylko te z trzyliterowymi. Jeśli zadamy nazwę jakiegoś katalogu, np. "ls -l *.? PO", to wyświetli również zawartość katalogu "PO".
+
+ls -ld *.? = różni się tym, że pominie zawartość podkatalogów a jedynie wypisze je same, tak jak zwykłe pliki.
+
+2. Operacje na plikach:
+
+cd $HOME = na pierwszy rzut oka zdaje się działać jak "cd home", ale tworzy zmienną środowiskową "HOME".
+
+touch = tworzy pusty plik.
+
+mv = przenosi pliki.
+
+cat <nazwa pliku> = wyświetla zawartość pliku.
+
+less <nazwa pliku> = jak cat, ale pozwala 'nawigować' po pliku; przydatne dla obszernych plików.
+
+less /etc/termcap
+   i polecenia wewnętrzne programu less:
+     SPACE              - pełny ekran do przodu
+     b                  - pełny ekran do tyłu
+     j                  - wiersz w dół
+     k                  - wiersz w górę
+     G                  - na koniec pliku
+     g                  - na początek pliku
+     h                  - pomoc: sumaryczne zestawienie poleceń
+     /string            - przeszukiwanie do przodu
+     n                  - przeszukiwanie dalej
+     ?string            - przeszukiwanie do tyłu
+     N                  - przeszukiwanie dalej w drugą stronę
+
+ls -l /etc | less
+
+3. Prawa dostępu do plików = pierwsze kroki: 
+
+cd $HOME = przejście do katalogu HOME
+echo proba > probny_plik = wpisanie "proba" w plik próbny
+chmod -r probny_plik = nadanie pliki prawo odczytusss
+ls -l probny_plik (--w------- 1 rmielcar ar2019 6 paź  4 19:43 probny_plik)
+cat probny_plik - wyswietlenie pliku (proba)
+chmod u+r probny_plik 
+ls -l probny_plik (rw------- 1 rmielcar ar2019 6 paź  4 19:43 probny_plik)
+cat probny_plik
+chmod go-rwx probny_plik
+ls -l probny_plik (-rw------- 1 rmielcar ar2019 6 paź  4 19:43 probny_plik)
+
+Wrzucono do testowego pliku zawartość, zablokowano możliwość jego odczytywania, sprawdzono czy się udało, nadano samemu sobie (użytkownikowi) prawo odczytu, sprawdzono czy się udało, a następnie odebrano grupie (do której należy użytkownik, czyli np. "ar2017") prawo odczytu, zapisu i wykonywania, również sprawdzając powodzenie tej czynności.
+
+4. Operacje na procesach:
+
+**ps** = wyświetla obecnie aktywne procesy wraz ich PID (Process Identification Number), numerami terminali z którymi są skojarzone, częściami czasu procesora przez jakie działały oraz komendami jakie je wywołały.
+
+**ps -e** = jak powyżej, ale wyświetla wszystkie procesy.
+
+**ps -ef** = teraz wyświetla też PPID (numery PID rodziców procesów), czas ich rozpoczęcia oraz konto użytkownika z którym są powiązane (np. root).
+
+**ps -ef | less** = otwiera powyższą listę w programie less.
+
+**ps -el** = wyświetla wszystkie procesy w długim formacie.
+
+5. Kasowanie procesów:
+
+kill pid
+kill -9 pid
+ill -9 -1              # uwaga - to jest polecenie samobójcze
+
+6. Uzyskiwanie informacji o użytkownikach włączonych do systemu: 
+
+who - Jego główne zadanie to wyświetlenie listy użytkowników, którzy są aktualnie zalogowani na danym komputerze
+finger - wypisuje wszystkich użytkowników obecnie zalogowanych na danej maszynie (i ich terminale)
+
+**who** pokazuje nam po prostu kto jest zalogowany w systemie, podając jedynie podstawowe info, zaś **finger** zapewnia więcej informacji, m.in. imię czy numer telefonu służbowego (jeśli ustawił).
+
+7. Uzyskiwanie informacji o historii wlaczen do systemu: 
+
+last
+last | less
+
+Uzyskałem historię włączeń do systemu. Wypisano je od najnowszych do najstarszych, z przedziałami czasu. Ciekawe i przydatne - można sprawdzić czy ktoś nam buszował po komputerze.
+
+8. Uzyskiwanie informacji o istniejących kontach użytkowników: 
+
+cat /etc/passwd                # plik kont
+niscat passwd.org_dir          # baza danych kont - może nie istnieć
+ldaplist passwd                # inna baza danych - też może nie istnieć
+
+Uzyskałem historię włączeń do systemu. Wypisano je od najnowszych do najstarszych, z przedziałami czasu. Ciekawe i przydatne - można sprawdzić czy ktoś nam buszował po komputerze.
+
+9. Proste skryty
+Utwórz plik z poleceniami demonstrującymi podstawowe operacje na plikach: tworzenie pliku i katalogu, zmienianie nazwy, praw dostępu, linkowanie, kasowanie pliku, itp. Uruchamiaj plik jako skrypt, czyli:
+sh nazwa-pliku
+Wypróbuj opcję śledzenia wykonania poleceń w pliku (set -x).
+
+touch plik1
+touch plik2
+mkdir katalog1
+mv plik2 plik_zmieniony
+cp ./plik_zmieniony ./katalog1/plik_przeniesiony
+chmod u-rwx plik1
+cat plik1
+rm plik1
+touch plik3
+touch plik4
+ln plik3 plik4
+
+Zgodnie z przewidywaniami wyświetlił się komunikat o niemożności otwarcia zablokowanego pliku1. System zapytał też, podczas linkowania, czy ma pominąć zabezpieczenie 44.
+
+10. Dalsze ćwiczenia ze skryptami są w plikach.
+
+11. 
+find /etc -type f -size -1k -mtime -3 -o -type f -size -250k -mtime +30 -mtime -90
+
+
+
+
+
